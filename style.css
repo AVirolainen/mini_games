@@ -1,0 +1,42 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.header{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    font-size: 34px;
+}
+
+.main-body{
+    margin-top: 35px;
+}
+
+.row-games{
+    display: flex;
+    justify-content: space-around;
+}
+.row-games:nth-child(2){
+    margin-top: 30px;
+}
+
+.block-game{
+    text-align: center;
+    height: 250px;
+    width: 300px;
+
+    border: 1px solid #b8c2cc;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+    transition: 0.5s linear;
+}
+
+.block-game:hover{
+    height: 270px;
+    width: 320px;
+}
