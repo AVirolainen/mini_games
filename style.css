@@ -25,6 +25,8 @@ body{
 }
 
 .block-game{
+    
+
     text-align: center;
     height: 250px;
     width: 300px;
@@ -37,6 +39,17 @@ body{
 }
 
 .block-game:hover{
-    height: 270px;
-    width: 320px;
+    transform: scale(1.20);
+}
+
+.box-image{
+    margin-top: 15px;
+    height: 150px;
+    width: 150px;
+}
+
+.block-name{
+    border-top: 1px solid #b8c2cc;
+    margin-top: 25px;
+    padding-top: 20px;
 }
