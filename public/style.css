@@ -39,17 +39,27 @@ body{
 }
 
 .block-game:hover{
-    transform: scale(1.20);
+    transform: scale(1.1);
 }
 
 .box-image{
-    margin-top: 15px;
+    margin-top: 25px;
     height: 150px;
     width: 150px;
 }
 
 .block-name{
     border-top: 1px solid #b8c2cc;
-    margin-top: 25px;
-    padding-top: 20px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.link-style{
+    text-decoration: none;
+    color: black;
+    transition: 1s linear;
+}
+
+.link-style:hover{
+    opacity: 0.5;
 }
