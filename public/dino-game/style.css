@@ -4,18 +4,27 @@
 }
 
 .dino-game{
-    width: 500px;
-    height: 200px;
-    border: 1px solid black;
+    
+    width: 1000px;
+    height: 500px;
+    
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+    margin: auto;
+    margin-top: 100px;
+
+    overflow: hidden;
+
 }
 
 #character{
-    width: 20px;
-    height: 50px;
-    background-color: red;
+    width: 100px;
+    height: 100px;
 
     position: relative;
+    
     top: 150px;
+    left: 50px;
 }
 
 .animate{
@@ -31,12 +40,12 @@
 
 
 #block{
-    width: 20px;
-    height: 20px;
-    background-color: blue;
+    width: 80px;
+    height: 50px;
+    
     position: relative;
-    top: 130px;
-    left: 480px;
+    top: 150px;
+    left: 820px;
 
 }
 
@@ -45,6 +54,83 @@
 }
 
 @keyframes block{
-    0%{left:480px}
-    100%{left:-40px}
+    0%{left:820px}
+    100%{left:-100px}
+}
+
+#ground{
+    width: 100%;
+    height: 3px;
+    
+    position: relative;
+    top: 145px;
+    background-color: #485461;
+    background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+}
+
+#cloud{
+    
+    left: 300px;
+    height: 200px;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 300px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  text-align: center;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#cloud{
+    height: 50px;
+    width: 100px;
+
+    position: relative;
+    top: 20px;
+    left: 820px;
+    animation: clouds 20s infinite linear;
+}
+
+#cloud:nth-child(1){
+    position: relative;
+    top: 40px;
+    
+}
+
+@keyframes clouds{
+    0%{left:1000px}
+    100%{left:-80px}
 }
