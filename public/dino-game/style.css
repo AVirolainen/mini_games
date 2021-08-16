@@ -134,3 +134,10 @@
     0%{left:1000px}
     100%{left:-80px}
 }
+
+#groundImage{
+    position: relative;
+    left: -210px;
+    width: 1500px;
+    top: -20px;
+}
