@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", ()=>{
     const grid = document.querySelector(".grid")
-    const doodler = document.createElement("div")
+    const doodler = document.createElement("img")
     let startPoint = 150
     let doodlerLeftSpace = 50
     let doodlerBottomSpace = startPoint
@@ -26,9 +26,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
         constructor(newPlatBottom){
             this.left = Math.random()*315
             this.bottom = newPlatBottom
-            this.visual = document.createElement('div')
+            this.visual = document.createElement('img')
 
             const visual = this.visual
+            visual.setAttribute('src', './assets/platform.png')
             visual.classList.add('platform')
             visual.style.left = this.left + 'px'
             visual.style.bottom = this.bottom +'px'
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     
     function createDoodler(){
         grid.appendChild(doodler)
+        doodler.setAttribute('src', '../assets/doodle.png')
         doodler.classList.add("doodler")
 
         doodlerLeftSpace = platforms[0].left
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 if(platform.bottom < 10){
                     let firstPlatform = platforms[0].visual
                     firstPlatform.classList.remove('platform')
+                    firstPlatform.removeAttribute('src')
                     platforms.shift()
                     let newPlatform = new Platform(600)
                     platforms.push(newPlatform)
@@ -105,7 +108,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 if (
                   (doodlerBottomSpace >= platform.bottom) &&
                   (doodlerBottomSpace <= (platform.bottom + 15)) &&
-                  ((doodlerLeftSpace + 60) >= platform.left) && 
+                  ((doodlerLeftSpace + 90) >= platform.left) && 
                   (doodlerLeftSpace <= (platform.left + 85)) &&
                   !isJumping
                   ) {
