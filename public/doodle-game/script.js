@@ -1,198 +1,224 @@
-document.addEventListener("DOMContentLoaded", ()=>{
-    const grid = document.querySelector(".grid")
-    const doodler = document.createElement("img")
-    let startPoint = 150
-    let doodlerLeftSpace = 50
-    let doodlerBottomSpace = startPoint
+const wrapper =()=>{initGame()}
 
-    let isGameOver = false
+function initGame(){
+const grid = document.querySelector(".grid")
+const doodler = document.createElement("img")
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
 
-    let platformAmount = 5
-    let platforms = []
+let startPoint = 150
+let doodlerLeftSpace = 50
+let doodlerBottomSpace = startPoint
 
-    let upperId
-    let downId
+let isGameOver = false
 
-    let isJumping = true
-    let isGoingLeft
-    let isGoingRight
-    let leftTimerId
-    let rightTimerId
+let platformAmount = 5
+let platforms = []
 
-    let score = 0
+let upperId
+let downId
 
-    
-    class Platform{
-        constructor(newPlatBottom){
-            this.left = Math.random()*315
-            this.bottom = newPlatBottom
-            this.visual = document.createElement('img')
+let isJumping = true
+let isGoingLeft
+let isGoingRight
+let leftTimerId
+let rightTimerId
 
-            const visual = this.visual
-            visual.setAttribute('src', './assets/platform.png')
-            visual.classList.add('platform')
-            visual.style.left = this.left + 'px'
-            visual.style.bottom = this.bottom +'px'
-            grid.appendChild(visual)
+let score = 0
+
+class Platform{
+    constructor(newPlatBottom){
+        this.left = Math.random()*315
+        this.bottom = newPlatBottom
+        this.visual = document.createElement('img')
+
+        const visual = this.visual
+        visual.setAttribute('src', './assets/platform.png')
+        visual.classList.add('platform')
+        visual.style.left = this.left + 'px'
+        visual.style.bottom = this.bottom +'px'
+        grid.appendChild(visual)
+    }
+}
+
+function createDoodler(){
+    grid.appendChild(doodler)
+    doodler.setAttribute('src', '../assets/doodle.png')
+    doodler.classList.add("doodler")
+
+    doodlerLeftSpace = platforms[0].left
+
+    doodler.style.left = doodlerLeftSpace + 'px'
+    doodler.style.bottom = doodlerBottomSpace + 'px'
+}
+
+
+function createPlatforms(){
+    for(let i=0; i<platformAmount; i++){
+        let platformGap = 600/platformAmount
+
+        let newPlatBottom = 100+i*platformGap
+        let newPlatform = new Platform(newPlatBottom)
+
+        platforms.push(newPlatform)
+        console.log(platforms)
+    }
+}
+
+function movePlatform(){
+    if(doodlerBottomSpace > 200){
+        platforms.forEach(platform=>{
+            platform.bottom -= 4
+            let visual = platform.visual
+            visual.style.bottom = platform.bottom + 'px'
+
+            if(platform.bottom < 10){
+                let firstPlatform = platforms[0].visual
+                firstPlatform.classList.remove('platform')
+                firstPlatform.removeAttribute('src')
+                grid.removeChild(firstPlatform)
+                platforms.shift()
+                let newPlatform = new Platform(600)
+                platforms.push(newPlatform)
+                score +=1
+
+            }
+        })
+    }
+}
+
+function jump(){
+    clearInterval(downId)
+    isJumping = true
+    upperId = setInterval(function(){
+        doodlerBottomSpace +=20
+        doodler.style.bottom = doodlerBottomSpace+'px'
+
+        if(doodlerBottomSpace>startPoint+200){
+            fall()
         }
-    }
-    
-    function createDoodler(){
-        grid.appendChild(doodler)
-        doodler.setAttribute('src', '../assets/doodle.png')
-        doodler.classList.add("doodler")
+    }, 30)
+}
 
-        doodlerLeftSpace = platforms[0].left
-
-        doodler.style.left = doodlerLeftSpace + 'px'
-        doodler.style.bottom = doodlerBottomSpace + 'px'
-    }
-
-
-    function createPlatforms(){
-        for(let i=0; i<platformAmount; i++){
-            let platformGap = 600/platformAmount
-
-            let newPlatBottom = 100+i*platformGap
-            let newPlatform = new Platform(newPlatBottom)
-
-            platforms.push(newPlatform)
-            console.log(platforms)
+function fall(){
+    clearInterval(upperId)
+    isJumping = false
+    downId = setInterval(function(){
+        doodlerBottomSpace -=6
+        doodler.style.bottom = doodlerBottomSpace+'px'
+        if(doodlerBottomSpace<=0){
+            gameOver()
         }
-    }
-
-    function movePlatform(){
-        if(doodlerBottomSpace > 200){
-            platforms.forEach(platform=>{
-                platform.bottom -= 4
-                let visual = platform.visual
-                visual.style.bottom = platform.bottom + 'px'
-
-                if(platform.bottom < 10){
-                    let firstPlatform = platforms[0].visual
-                    firstPlatform.classList.remove('platform')
-                    firstPlatform.removeAttribute('src')
-                    platforms.shift()
-                    let newPlatform = new Platform(600)
-                    platforms.push(newPlatform)
-                    score +=1
-
+        platforms.forEach(platform => {
+            if (
+                (doodlerBottomSpace >= platform.bottom) &&
+                (doodlerBottomSpace <= (platform.bottom + 15)) &&
+                ((doodlerLeftSpace + 90) >= platform.left) && 
+                (doodlerLeftSpace <= (platform.left + 85)) &&
+                !isJumping
+                ) {
+                console.log('tick')
+                startPoint = doodlerBottomSpace
+                jump()
                 }
             })
-        }
+    }, 30)
+
+}
+
+function control(e){
+    if(e.key === 'ArrowLeft'){
+        moveLeft()
     }
-
-    function jump(){
-        clearInterval(downId)
-        isJumping = true
-        upperId = setInterval(function(){
-            doodlerBottomSpace +=20
-            doodler.style.bottom = doodlerBottomSpace+'px'
-
-            if(doodlerBottomSpace>startPoint+200){
-                fall()
-            }
-        }, 30)
+    else if(e.key === 'ArrowRight'){
+        moveRight()
+    }else if(e.key === 'ArrowUp'){
+        moveStraight()
     }
+}
 
-    function fall(){
-        clearInterval(upperId)
-        isJumping = false
-        downId = setInterval(function(){
-            doodlerBottomSpace -=6
-            doodler.style.bottom = doodlerBottomSpace+'px'
-            if(doodlerBottomSpace<=0){
-                gameOver()
-            }
-            platforms.forEach(platform => {
-                if (
-                  (doodlerBottomSpace >= platform.bottom) &&
-                  (doodlerBottomSpace <= (platform.bottom + 15)) &&
-                  ((doodlerLeftSpace + 90) >= platform.left) && 
-                  (doodlerLeftSpace <= (platform.left + 85)) &&
-                  !isJumping
-                  ) {
-                    console.log('tick')
-                    startPoint = doodlerBottomSpace
-                    jump()
-                  }
-              })
-        }, 30)
+function moveStraight(){
+    isGoingLeft = false
+    isGoingRight = false
+    clearInterval(rightTimerId)
+    clearInterval(leftTimerId)
+}
 
-    }
 
-    function control(e){
-        if(e.key === 'ArrowLeft'){
-            moveLeft()
-        }
-        else if(e.key === 'ArrowRight'){
-            moveRight()
-        }else if(e.key === 'ArrowUp'){
-            moveStraight()
-        }
-    }
 
-    function moveStraight(){
-        isGoingLeft = false
+function moveLeft(){
+    if(isGoingRight){
+        clearInterval(rightTimerId)
         isGoingRight = false
-        clearInterval(rightTimerId)
+    }
+    isGoingLeft = true
+    leftTimerId = setInterval(() => {
+        if(doodlerLeftSpace>=0){
+            doodlerLeftSpace -=1
+            doodler.style.left = doodlerLeftSpace+'px'
+        } else moveRight()
+    }, 1);
+}
+
+function moveRight(){
+    if(isGoingLeft){
         clearInterval(leftTimerId)
+        isGoingLeft = false
     }
+    isGoingRight = true
+    rightTimerId = setInterval(() => {
+        if(doodlerLeftSpace<=313){
+            doodlerLeftSpace +=1
+            doodler.style.left = doodlerLeftSpace+'px'
+        } else moveLeft()
+    }, 1);
+}
 
-
-
-    function moveLeft(){
-        if(isGoingRight){
-            clearInterval(rightTimerId)
-            isGoingRight = false
-        }
-        isGoingLeft = true
-        leftTimerId = setInterval(() => {
-            if(doodlerLeftSpace>=0){
-                doodlerLeftSpace -=5
-                doodler.style.left = doodlerLeftSpace+'px'
-            } else moveRight()
-        }, 20);
+function gameOver(){
+    console.log('gameOver')
+    isGameOver = true
+    while(grid.firstChild){
+        grid.removeChild(grid.firstChild)
     }
+    grid.innerHTML = score
+    clearInterval(upperId)
+    clearInterval(downId)
+    clearInterval(rightTimerId)
+    clearInterval(leftTimerId)
 
-    function moveRight(){
-        if(isGoingLeft){
-            clearInterval(leftTimerId)
-            isGoingLeft = false
-        }
-        isGoingRight = true
-        rightTimerId = setInterval(() => {
-            if(doodlerLeftSpace<=313){
-                doodlerLeftSpace +=5
-                doodler.style.left = doodlerLeftSpace+'px'
-            } else moveLeft()
-        }, 20);
+    modal.style.display = "block";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        grid.innerHTML = ""
+        wrapper()
     }
+}
 
-    function gameOver(){
-        console.log('gameOver')
-        isGameOver = true
-        while(grid.firstChild){
-            grid.removeChild(grid.firstChild)
-        }
-        grid.innerHTML = score
-        clearInterval(upperId)
-        clearInterval(downId)
-        clearInterval(rightTimerId)
-        clearInterval(leftTimerId)
+span.onclick = function() {
+    modal.style.display = "none";
+    grid.innerHTML = ""
+    wrapper()
+}
+
+function start(){
+    if(!isGameOver){
+        createPlatforms()
+        createDoodler()
+        
+        setInterval(movePlatform, 30)  
+        jump()
+        
+        document.addEventListener('keyup', control)
     }
+}
 
-    function start(){
-        if(!isGameOver){
-            createPlatforms()
-            createDoodler()
-            
-            setInterval(movePlatform, 30)  
-            jump()
-            
-            document.addEventListener('keyup', control)
-        }
-    }
 
-    start()
-})
+start()
+}
+
+initGame()
+
+
