@@ -26,6 +26,8 @@ let rightTimerId
 
 let score = 0
 
+const keyState = {};
+
 class Platform{
     constructor(newPlatBottom){
         this.left = Math.random()*315
@@ -126,52 +128,24 @@ function fall(){
 
 }
 
-function control(e){
-    if(e.key === 'ArrowLeft'){
+function keyHandler(e){  // simple but powerful
+    keyState[e.code] = e.type === "keydown";
+    if(keyState.ArrowLeft){
         moveLeft()
     }
-    else if(e.key === 'ArrowRight'){
+    else if(keyState.ArrowRight){
         moveRight()
-    }else if(e.key === 'ArrowUp'){
-        moveStraight()
-    }
-}
-
-function moveStraight(){
-    isGoingLeft = false
-    isGoingRight = false
-    clearInterval(rightTimerId)
-    clearInterval(leftTimerId)
-}
-
+}}
 
 
 function moveLeft(){
-    if(isGoingRight){
-        clearInterval(rightTimerId)
-        isGoingRight = false
-    }
-    isGoingLeft = true
-    leftTimerId = setInterval(() => {
-        if(doodlerLeftSpace>=0){
-            doodlerLeftSpace -=1
-            doodler.style.left = doodlerLeftSpace+'px'
-        } else moveRight()
-    }, 1);
+    doodlerLeftSpace -=10
+    doodler.style.left = doodlerLeftSpace+'px'
 }
 
 function moveRight(){
-    if(isGoingLeft){
-        clearInterval(leftTimerId)
-        isGoingLeft = false
-    }
-    isGoingRight = true
-    rightTimerId = setInterval(() => {
-        if(doodlerLeftSpace<=313){
-            doodlerLeftSpace +=1
-            doodler.style.left = doodlerLeftSpace+'px'
-        } else moveLeft()
-    }, 1);
+    doodlerLeftSpace +=10
+    doodler.style.left = doodlerLeftSpace+'px'
 }
 
 function gameOver(){
@@ -211,7 +185,9 @@ function start(){
         setInterval(movePlatform, 30)  
         jump()
         
-        document.addEventListener('keyup', control)
+        document.addEventListener('keyup', keyHandler)
+        document.addEventListener("keydown", keyHandler);
+
     }
 }
 
@@ -220,5 +196,3 @@ start()
 }
 
 initGame()
-
-
