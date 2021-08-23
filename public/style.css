@@ -63,3 +63,7 @@ body{
 .link-style:hover{
     opacity: 0.5;
 }
+
+#space-sprite{
+    width: 200px;
+}
